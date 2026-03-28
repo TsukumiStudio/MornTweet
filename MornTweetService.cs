@@ -7,23 +7,34 @@ using UnityEngine.Networking;
 namespace MornLib
 {
     /// <summary>
-    /// スクリーンショットを撮影し、Imgur にアップロードして Twitter/X で共有する。
+    /// Twitter/X への共有ユーティリティ。テキストのみ、またはスクリーンショット付きで投稿できる。
     /// </summary>
     public static class MornTweetService
     {
+        /// <summary>
+        /// Twitter Intent URL を開いてツイートする（テキストのみ）。
+        /// </summary>
+        /// <param name="tweetText">ツイート本文。</param>
+        /// <param name="hashtags">ハッシュタグ（カンマ区切り、#不要）。</param>
+        public static void Tweet(string tweetText, string hashtags)
+        {
+            var text = UnityWebRequest.EscapeURL(tweetText);
+            var tweetUrl = $"http://twitter.com/intent/tweet?text={text}&hashtags={hashtags}";
+            MornWebUtil.Open(tweetUrl);
+        }
+
         /// <summary>
         /// スクリーンショットを撮影 → Imgur へアップロード → Twitter Intent URL を開く。
         /// </summary>
         /// <param name="tweetText">ツイート本文。アップロード成功時は画像URLが末尾に付与される。</param>
         /// <param name="hashtags">ハッシュタグ（カンマ区切り、#不要）。</param>
         /// <param name="imgurClientId">Imgur API の Client-ID。</param>
-        public static async UniTask TweetWithScreenShotAsync(string tweetText, string hashtags, string imgurClientId)
+        public async static UniTask TweetWithScreenShotAsync(string tweetText, string hashtags, string imgurClientId)
         {
             await UniTask.WaitForEndOfFrame();
             var tex = new Texture2D(Screen.width, Screen.height, TextureFormat.RGB24, false);
             tex.ReadPixels(new Rect(0, 0, Screen.width, Screen.height), 0, 0);
             tex.Apply();
-
             var uploadedUrl = "";
             try
             {
@@ -33,7 +44,6 @@ namespace MornLib
                 using var www = UnityWebRequest.Post("https://api.imgur.com/3/image.xml", form);
                 www.SetRequestHeader("AUTHORIZATION", $"Client-ID {imgurClientId}");
                 await www.SendWebRequest();
-
                 if (www.result == UnityWebRequest.Result.Success)
                 {
                     var xDoc = XDocument.Parse(www.downloadHandler.text);
@@ -52,9 +62,7 @@ namespace MornLib
                 UnityEngine.Object.Destroy(tex);
             }
 
-            var body = string.IsNullOrEmpty(uploadedUrl)
-                ? tweetText
-                : $"{tweetText}\n{uploadedUrl}";
+            var body = string.IsNullOrEmpty(uploadedUrl) ? tweetText : $"{tweetText}\n{uploadedUrl}";
             var text = UnityWebRequest.EscapeURL(body);
             var tweetUrl = $"http://twitter.com/intent/tweet?text={text}&hashtags={hashtags}";
             MornWebUtil.Open(tweetUrl);
