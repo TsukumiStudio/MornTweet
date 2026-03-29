@@ -22,12 +22,12 @@ Unity Package Manager で以下の Git URL を追加:
 https://github.com/TsukumiStudio/MornTweet.git
 ```
 
+`Window > Package Manager > + > Add package from git URL...` に貼り付けてください。
+
 ### スクリーンショット付きツイートを使う場合
 
 [freeimage.host API](https://freeimage.host/api) から API Key を取得してください。
 2026年3月29日現在、アカウント登録不要で API Key を取得できます。
-
-> **注意:** freeimage.host は外部の無料サービスです。サービスの停止・仕様変更・レート制限等について、本ライブラリの作者は一切の責任を負いません。
 
 ## 使い方
 
@@ -55,6 +55,10 @@ StartCoroutine(MornTweetService.TweetWithScreenShotCoroutine(
     "ゲームをプレイしました！", "MyGame,Unity", "your_api_key"
 ));
 ```
+
+## 注意事項
+
+- freeimage.host は外部の無料サービスです。サービスの停止・仕様変更・レート制限等について、本ライブラリの作者は一切の責任を負いません
 
 ## ライセンス
 
