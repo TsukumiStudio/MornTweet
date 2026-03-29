@@ -1,4 +1,4 @@
-using Cysharp.Threading.Tasks;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -14,7 +14,7 @@ namespace MornLib
         [SerializeField] [TextArea] private string _tweetText;
         [SerializeField] private string[] _hashtags;
         [SerializeField] private bool _includeScreenshot;
-        [SerializeField] private string _imgurClientId;
+        [SerializeField] private string _apiKey;
 
         private bool _isTweeting;
 
@@ -38,7 +38,9 @@ namespace MornLib
             var hashtags = string.Join(",", _hashtags);
             if (_includeScreenshot)
             {
-                TweetWithScreenShotAsync(hashtags).Forget();
+                if (_isTweeting) return;
+                _isTweeting = true;
+                StartCoroutine(TweetWithScreenShotCoroutine(hashtags));
             }
             else
             {
@@ -46,18 +48,10 @@ namespace MornLib
             }
         }
 
-        private async UniTaskVoid TweetWithScreenShotAsync(string hashtags)
+        private IEnumerator TweetWithScreenShotCoroutine(string hashtags)
         {
-            if (_isTweeting) return;
-            _isTweeting = true;
-            try
-            {
-                await MornTweetService.TweetWithScreenShotAsync(_tweetText, hashtags, _imgurClientId);
-            }
-            finally
-            {
-                _isTweeting = false;
-            }
+            yield return MornTweetService.TweetWithScreenShotCoroutine(_tweetText, hashtags, _apiKey);
+            _isTweeting = false;
         }
     }
 }

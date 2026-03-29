@@ -11,7 +11,8 @@
 ## 概要
 
 Unity ゲームから Twitter/X にツイートするユーティリティです。
-テキストのみ、またはスクリーンショット付き (Imgur 経由) で投稿できます。
+テキストのみ、またはスクリーンショット付き (freeimage.host 経由) で投稿できます。
+外部パッケージへの依存はありません。
 
 ## 導入方法
 
@@ -21,16 +22,22 @@ Unity Package Manager で以下の Git URL を追加:
 https://github.com/TsukumiStudio/MornTweet.git
 ```
 
-### 依存パッケージ
+### スクリーンショット付きツイートを使う場合
 
-- [UniTask](https://github.com/Cysharp/UniTask)
-- [MornWebUtil](https://github.com/TsukumiStudio/MornWebUtil)
+[freeimage.host API](https://freeimage.host/api) から API Key を取得してください。
 
 ## 使い方
 
 ### コンポーネント
 
-`MornTweetButton` を Button にアタッチし、Inspector でテキスト・ハッシュタグ・画像添付の有無を設定してください。
+`MornTweetButton` を Button にアタッチし、Inspector で設定:
+
+| プロパティ | 説明 |
+|---|---|
+| **Tweet Text** | ツイート本文 |
+| **Hashtags** | ハッシュタグ (配列、#不要) |
+| **Include Screenshot** | スクリーンショットを添付するか |
+| **Api Key** | freeimage.host の API Key (スクリーンショット使用時のみ) |
 
 ### スクリプト
 
@@ -40,10 +47,10 @@ using MornLib;
 // テキストのみ
 MornTweetService.Tweet("ゲームをプレイしました！", "MyGame,Unity");
 
-// スクリーンショット付き
-await MornTweetService.TweetWithScreenShotAsync(
-    "ゲームをプレイしました！", "MyGame,Unity", "your_imgur_client_id"
-);
+// スクリーンショット付き (コルーチン)
+StartCoroutine(MornTweetService.TweetWithScreenShotCoroutine(
+    "ゲームをプレイしました！", "MyGame,Unity", "your_api_key"
+));
 ```
 
 ## ライセンス
