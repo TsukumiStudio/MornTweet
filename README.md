@@ -11,7 +11,7 @@
 ## 概要
 
 Unity ゲームから Twitter/X にツイートするユーティリティです。
-テキストのみ、またはスクリーンショット付き (freeimage.host 経由) で投稿できます。
+テキストのみ、またはスクリーンショット付き (imgBB 経由) で投稿できます。
 外部パッケージへの依存はありません。
 
 ## 導入方法
@@ -26,8 +26,7 @@ https://github.com/TsukumiStudio/MornTweet.git
 
 ### スクリーンショット付きツイートを使う場合
 
-[freeimage.host API](https://freeimage.host/api) から API Key を取得してください。
-2026年3月29日現在、アカウント登録不要で API Key を取得できます。
+[imgBB](https://imgbb.com/) でアカウントを作成し、[API ページ](https://api.imgbb.com/) から API Key を取得してください。
 
 ## 使い方
 
@@ -40,7 +39,7 @@ https://github.com/TsukumiStudio/MornTweet.git
 | **Tweet Text** | ツイート本文 |
 | **Hashtags** | ハッシュタグ (配列、#不要) |
 | **Include Screenshot** | スクリーンショットを添付するか |
-| **Api Key** | freeimage.host の API Key (スクリーンショット使用時のみ) |
+| **Api Key** | imgBB の API Key (スクリーンショット使用時のみ) |
 
 ### スクリプト
 
@@ -58,7 +57,7 @@ StartCoroutine(MornTweetService.TweetWithScreenShotCoroutine(
 
 ## 注意事項
 
-- freeimage.host は外部の無料サービスです。サービスの停止・仕様変更・レート制限等について、本ライブラリの作者は一切の責任を負いません
+- imgBB は外部サービスです。サービスの停止・仕様変更・レート制限等について、本ライブラリの作者は一切の責任を負いません
 
 ## ライセンス
 

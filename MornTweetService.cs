@@ -8,7 +8,7 @@ namespace MornLib
 {
     /// <summary>
     /// Twitter/X への共有ユーティリティ。テキストのみ、またはスクリーンショット付きで投稿できる。
-    /// 画像アップロードには freeimage.host API を使用。
+    /// 画像アップロードには imgBB API を使用。
     /// </summary>
     public static class MornTweetService
     {
@@ -28,36 +28,34 @@ namespace MornLib
         }
 
         /// <summary>
-        /// スクリーンショットを撮影 → freeimage.host へアップロード → Twitter Intent URL を開く。
+        /// スクリーンショットを撮影 → imgBB へアップロード → Twitter Intent URL を開く。
         /// MonoBehaviour.StartCoroutine で実行すること。
         /// </summary>
         /// <param name="tweetText">ツイート本文。アップロード成功時は画像URLが末尾に付与される。</param>
         /// <param name="hashtags">ハッシュタグ（カンマ区切り、#不要）。</param>
-        /// <param name="apiKey">freeimage.host の API Key。</param>
+        /// <param name="apiKey">imgBB の API Key。</param>
         public static IEnumerator TweetWithScreenShotCoroutine(string tweetText, string hashtags, string apiKey)
         {
             yield return new WaitForEndOfFrame();
+
             var tex = new Texture2D(Screen.width, Screen.height, TextureFormat.RGB24, false);
             tex.ReadPixels(new Rect(0, 0, Screen.width, Screen.height), 0, 0);
             tex.Apply();
 
             var uploadedUrl = "";
             var form = new WWWForm();
-            form.AddField("key", apiKey);
-            form.AddField("source", Convert.ToBase64String(tex.EncodeToJPG()));
-            form.AddField("format", "json");
-            using (var www = UnityWebRequest.Post("https://freeimage.host/api/1/upload", form))
+            form.AddField("image", Convert.ToBase64String(tex.EncodeToJPG()));
+            using (var www = UnityWebRequest.Post($"https://api.imgbb.com/1/upload?key={apiKey}", form))
             {
                 yield return www.SendWebRequest();
                 if (www.result == UnityWebRequest.Result.Success)
                 {
-                    var json = JsonUtility.FromJson<FreeImageResponse>(www.downloadHandler.text);
-                    if (json?.image != null)
+                    var json = JsonUtility.FromJson<ImgBBResponse>(www.downloadHandler.text);
+                    if (json?.data != null)
                     {
-                        // ビューアページURL (OGP展開される) を優先、なければ直接URL
-                        uploadedUrl = !string.IsNullOrEmpty(json.image.url_viewer)
-                            ? json.image.url_viewer
-                            : json.image.url;
+                        uploadedUrl = !string.IsNullOrEmpty(json.data.url_viewer)
+                            ? json.data.url_viewer
+                            : json.data.url;
                     }
                 }
                 else
@@ -97,14 +95,14 @@ namespace MornLib
         }
 
         [Serializable]
-        private class FreeImageResponse
+        private class ImgBBResponse
         {
-            public int status_code;
-            public FreeImageData image;
+            public bool success;
+            public ImgBBData data;
         }
 
         [Serializable]
-        private class FreeImageData
+        private class ImgBBData
         {
             public string url;
             public string url_viewer;
