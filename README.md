@@ -30,7 +30,7 @@ https://github.com/TsukumiStudio/MornTweet.git
 
 ## 使い方
 
-### コンポーネント
+### コンポーネントから使う
 
 `MornTweetButton` を Button にアタッチし、Inspector で設定:
 
@@ -41,7 +41,7 @@ https://github.com/TsukumiStudio/MornTweet.git
 | **Include Screenshot** | スクリーンショットを添付するか |
 | **Api Key** | imgBB の API Key (スクリーンショット使用時のみ) |
 
-### スクリプト
+### スクリプトから使う
 
 ```csharp
 using MornLib;
