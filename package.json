@@ -2,7 +2,7 @@
   "name": "com.tsukumistudio.morntweet",
   "version": "1.0.0",
   "displayName": "MornTweet",
-  "description": "スクリーンショット撮影・Imgur アップロード・Twitter/X 共有を行うユーティリティ。",
+  "description": "スクリーンショット撮影・freeimage.host アップロード・Twitter/X 共有を行うユーティリティ。",
   "unity": "6000.0",
   "license": "Unlicense",
   "author": {
@@ -13,6 +13,6 @@
     "twitter",
     "screenshot",
     "share",
-    "imgur"
+    "freeimage"
   ]
 }
