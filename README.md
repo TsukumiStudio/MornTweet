@@ -25,6 +25,9 @@ https://github.com/TsukumiStudio/MornTweet.git
 ### スクリーンショット付きツイートを使う場合
 
 [freeimage.host API](https://freeimage.host/api) から API Key を取得してください。
+2026年3月29日現在、アカウント登録不要で API Key を取得できます。
+
+> **注意:** freeimage.host は外部の無料サービスです。サービスの停止・仕様変更・レート制限等について、本ライブラリの作者は一切の責任を負いません。
 
 ## 使い方
 
